@@ -1,4 +1,4 @@
-# secret-santa
+# SECRET SANTA
 
 ## Project setup
 ```
