@@ -12,7 +12,7 @@
             class="py-4"
             flat
           >
-            <h3>{{ $t("welcomeMessage") }}</h3>
+            <h3>{{ $t("loginWithEmail") }}</h3>
           </v-card>
 
           <v-card
@@ -21,38 +21,40 @@
             max-width="400"
           >
             <v-card-text>
-              <v-form ref="loginForm" v-model="validFullname" lazy-validation>
+              <v-form ref="loginForm" v-model="valid" lazy-validation>
                 <v-row>
                   <v-col cols="12" align="center">
                     <v-text-field
-                      v-model="fullNameEntered"
-                      :rules="[rules.required, rules.min]"
-                      :label="fullNameLabel"
+                      v-model="email"
+                      name="email"
+                      type="text"
+                      :rules="emailRules"
+                      label="Email"
                       required
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" align="left">
-                    {{ $t("nParticipants") }}:
-                  </v-col>
                   <v-col cols="12" align="center">
-                    <v-slider
-                      v-model="computedParticipants"
-                      max="20"
-                      min="2"
-                      thumb-label="always"
+                    <v-text-field
+                      v-model="password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="[rules.required, rules.min]"
+                      :type="show1 ? 'text' : 'password'"
+                      name="input-10-1"
+                      label="Password"
+                      counter
+                      @click:append="show1 = !show1"
                       required
-                      style="margin-top: 10px"
-                    ></v-slider>
+                    ></v-text-field>
                   </v-col>
                   <v-col class="d-flex" cols="12" align="center">
                     <v-btn
-                      :disabled="!validFullname"
+                      :disabled="!valid"
                       x-large
                       block
                       color="secondary"
                       @click="login"
-                    >
-                      {{ $t("generate") }}
+                    ><i v-if="isLoading" class="fa fa-spinner fa-spin" />
+                      {{ $t("login") }}
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -60,10 +62,9 @@
             </v-card-text>
           </v-card>
 
-            <br />
+          <br />
           <v-card flat style="background-color: rgba(255, 255, 255, 0)">
-            <v-label> {{ $t("alreadyRegistered") }} </v-label> <br />
-            <v-btn text @click="openLogin" class="hover"> {{ $t("loginHere") }} </v-btn>
+            <v-btn text @click="goBack"> {{ $t("goBack") }} </v-btn>
           </v-card>
         </v-col>
       </v-row>
@@ -77,30 +78,54 @@ import i18n from "@/i18n";
 
 export default {
   data: () => ({
-    validFullname: true,
-    fullNameEntered: null,
+    valid: true,
+    email: "",
+    password: "",
+    show1: false,
+    isLoading: false,
+    emailRules: [
+      (v) => !!v || i18n.t("required"),
+      (v) => /.+@.+\..+/.test(v) || i18n.t("emailInvalid"),
+    ],
     rules: {
       required: (value) => !!value || i18n.t("required"),
-      min: (v) => (v && v.length >= 3) || i18n.t("min3Chars"),
+      min: (v) => (v && v.length >= 8) || i18n.t("min8Chars"),
     },
   }),
   metaInfo: {
     titleTemplate: "%s | Login",
   },
   methods: {
-    ...mapActions(["setNParticipants", "setFullName"]),
+    ...mapActions(["loginWithEmail"]),
     login() {
       if (this.$refs.loginForm.validate()) {
-        this.$store.dispatch("setFullName", this.fullNameEntered);
-        console.log("Loggged in as: " + this.fullNameEntered);
-        this.$router.push("/game");
+        this.isLoading = true;
+        let data = {
+          email: this.email,
+          password: this.password
+        };
+        this.loginWithEmail(data)
+          .then(() => {
+            this.$router.push("/game");
+          })
+          .catch((error) => {
+            this.$swal("Error en los datos");
+            console.log(error);
+          })
+          .then(() => {
+            this.isLoading = false;
+          });
+
+        //this.$store.dispatch("loginWithEmail", this.fullNameEntered);
+        console.log("Loggged in as: " + this.email);
+
       } else {
         this.$swal(i18n.t("errorLogin"));
       }
     },
-    openLogin(){
-      this.$router.push("/loginWithEmail");
-    }
+    goBack() {
+      this.$router.push("/");
+    },
   },
   computed: {
     ...mapGetters(["nParticipants"]),
@@ -112,16 +137,10 @@ export default {
         this.$store.dispatch("setNParticipants", newValue);
       },
     },
-    fullNameLabel() {
-      return i18n.t("fullName");
-    },
   },
 };
 </script>
 
 
 <style scoped>
-.hover:hover{
-    cursor:pointer;
-}
 </style>
