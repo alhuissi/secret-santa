@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center" style="height: 70vh">
         <v-col align="center">
-          <!-- The image and name of the person you have to give gift, with a little css christmas animation -->
+          <!-- The image and name of the person you have to give gift to, with a little css christmas animation -->
           <div class="animation-wrapper">
             <v-row>
               <v-col align="center">
@@ -29,7 +29,7 @@
                   size="100"
                   style="transition: all 325ms ease; margin-top: 10px"
                 >
-                  <v-img :src="this.assigned[0].receiver.photo"
+                  <v-img :src="this.assigned[0].receiver.picture"
                     ><template v-slot:placeholder>
                       <v-sheet>
                         <v-skeleton-loader type="card-avatar" />
@@ -64,9 +64,8 @@
               </v-col>
             </v-row>
           </div>
-
-          <!-- List of participants -->
           <v-card flat max-width="600" class="my-4">
+            <!-- List of participants -->
             <v-expansion-panels>
               <v-expansion-panel>
                 <v-expansion-panel-header
@@ -76,7 +75,7 @@
                     text-transform: uppercase;
                     color: white;
                     padding-left: 50px;
-                    border-radius:5px;
+                    border-radius: 5px;
                   "
                 >
                   <h3>{{ $t("groupList") }}</h3>
@@ -85,8 +84,47 @@
                   <v-row align="center">
                     <v-col cols="1" align="center"> <b>1</b> </v-col>
                     <v-col cols="3" md="2">
-                      <v-avatar color="red">
-                        <v-icon dark> mdi-account-circle </v-icon>
+                      <v-avatar color="grey">
+                        <!--v-icon dark> mdi-account-circle </v-icon-->
+                        <v-icon
+                          v-if="
+                            !uploadEnd && !uploading && profilePicture == ''
+                          "
+                          dark
+                          >mdi-account-circle</v-icon
+                        >
+                        <v-img v-if="uploadEnd" :src="downloadURL" contain>
+                          <template v-slot:placeholder>
+                            <v-row
+                              class="fill-height ma-0"
+                              align="center"
+                              justify="center"
+                            >
+                              <v-progress-circular
+                                indeterminate
+                                color="grey lighten-5"
+                              ></v-progress-circular>
+                            </v-row>
+                          </template>
+                        </v-img>
+                        <v-img
+                          v-if="profilePicture != '' && !uploadEnd"
+                          :src="profilePicture"
+                          contain
+                        >
+                          <template v-slot:placeholder>
+                            <v-row
+                              class="fill-height ma-0"
+                              align="center"
+                              justify="center"
+                            >
+                              <v-progress-circular
+                                indeterminate
+                                color="grey lighten-5"
+                              ></v-progress-circular>
+                            </v-row>
+                          </template>
+                        </v-img>
                       </v-avatar>
                     </v-col>
                     <v-col cols="7" align="left">
@@ -123,6 +161,7 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
+            <!-- Save List / Register -->
             <v-expansion-panels v-if="!isLoggedIn" class="my-2">
               <v-expansion-panel>
                 <v-expansion-panel-header
@@ -132,7 +171,7 @@
                     text-transform: uppercase;
                     color: white;
                     padding-left: 50px;
-                    border-radius:5px;
+                    border-radius: 5px;
                   "
                 >
                   <h3>{{ $t("saveList") }}</h3>
@@ -145,11 +184,11 @@
                         v-model="validRegister"
                         lazy-validation
                       >
-                      <v-row>
-                        <v-col>
-                          <h4>{{ $t("registerText") }}</h4>
-                        </v-col>
-                      </v-row>
+                        <v-row>
+                          <v-col>
+                            <h4>{{ $t("registerText") }}</h4>
+                          </v-col>
+                        </v-row>
                         <v-row>
                           <v-col cols="12">
                             <v-text-field
@@ -186,15 +225,15 @@
                             ></v-text-field>
                           </v-col>
                           <v-spacer></v-spacer>
-                          <v-col
-                            cols="12"
-                            align="center"
-                          >
+                          <v-col cols="12" align="center">
                             <v-btn
                               :disabled="!validRegister"
                               color="success"
                               @click="register"
-                              ><i v-if="registerIsLoading" class="fa fa-spinner fa-spin" />{{ $t("register") }}</v-btn
+                              ><i
+                                v-if="registerIsLoading"
+                                class="fa fa-spinner fa-spin"
+                              />{{ $t("register") }}</v-btn
                             >
                           </v-col>
                         </v-row>
@@ -204,13 +243,158 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
-            <v-btn v-if="isLoggedIn"
+            <!-- Configuration -->
+            <v-expansion-panels v-if="isLoggedIn" class="my-2">
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  color="secondary"
+                  style="
+                    text-align: center;
+                    text-transform: uppercase;
+                    color: white;
+                    padding-left: 50px;
+                    border-radius: 5px;
+                  "
+                >
+                  <h3>{{ $t("configuration") }}</h3>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content class="my-4">
+                  <v-row align="center">
+                    <v-col cols="4">
+                      <v-avatar color="grey">
+                        <!--v-icon dark> mdi-account-circle </v-icon-->
+                        <v-icon
+                          v-if="
+                            !uploadEnd && !uploading && profilePicture == ''
+                          "
+                          dark
+                          >mdi-account-circle</v-icon
+                        >
+                        <v-img v-if="uploadEnd" :src="downloadURL" contain>
+                          <template v-slot:placeholder>
+                            <v-row
+                              class="fill-height ma-0"
+                              align="center"
+                              justify="center"
+                            >
+                              <v-progress-circular
+                                indeterminate
+                                color="grey lighten-5"
+                              ></v-progress-circular>
+                            </v-row>
+                          </template>
+                        </v-img>
+                        <v-img
+                          v-if="profilePicture != '' && !uploadEnd"
+                          :src="profilePicture"
+                          contain
+                        >
+                          <template v-slot:placeholder>
+                            <v-row
+                              class="fill-height ma-0"
+                              align="center"
+                              justify="center"
+                            >
+                              <v-progress-circular
+                                indeterminate
+                                color="grey lighten-5"
+                              ></v-progress-circular>
+                            </v-row>
+                          </template>
+                        </v-img>
+                      </v-avatar>
+                    </v-col>
+                    <v-col cols="8" align="left">
+                      <v-btn
+                        color="black"
+                        @click.native="selectFile"
+                        block
+                        dark
+                        small
+                        outlined
+                        v-if="!uploading"
+                        ><h4>{{ $t("changePicture") }}</h4>
+                      </v-btn>
+                      <form ref="form" style="display: none">
+                        <input
+                          id="files"
+                          type="file"
+                          name="file"
+                          ref="uploadInput"
+                          accept="image/*"
+                          :multiple="false"
+                          @change="detectFiles($event)"
+                        />
+                      </form>
+                      <v-progress-circular
+                        v-if="uploading && !uploadEnd"
+                        :size="100"
+                        :width="15"
+                        :rotate="360"
+                        :value="progressUpload"
+                        color="white"
+                        >{{ progressUpload }}%</v-progress-circular
+                      >
+                      <!--div v-if="!uploadEnd && !uploading">(Max. 500 KB)</div>
+                      <div v-if="uploadEnd">
+                        No olvides guardar tus cambios
+                        <v-btn outlined color="white" @click="deleteImage()"
+                            >
+                            Cancelar
+                            </v-btn>
+                      </div-->
+                    </v-col>
+                  </v-row>
+                  <v-divider class="my-6"></v-divider>
+
+                  <v-row align="center">
+                    <v-col cols="4">
+                      <v-icon size="30">mdi-autorenew</v-icon>
+                    </v-col>
+                    <v-col cols="8">
+                      <v-btn
+                        color="black"
+                        block
+                        dark
+                        outlined
+                        small
+                        @click="createNewGroup"
+                      >
+                        <h4>{{ $t("createNewGroup") }}</h4>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                  <v-divider class="my-6"></v-divider>
+
+                  <v-row align="center">
+                    <v-col cols="4">
+                      <v-icon size="30">mdi-shuffle-variant</v-icon>
+                    </v-col>
+                    <v-col cols="8">
+                      <v-btn
+                        color="black"
+                        block
+                        dark
+                        outlined
+                        small
+                        @click="reshuffle"
+                      >
+                        <h4>{{ $t("shuffleAgain") }}</h4>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <!--v-btn
+              v-if="isLoggedIn"
               color="secondary"
               block
               style="margin-top: 10px"
-              @click="save">
+              @click="save"
+            >
               <h3>{{ $t("saveList") }}</h3>
-            </v-btn>
+            </v-btn-->
             <v-btn
               color="secondary"
               block
@@ -230,12 +414,19 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { firestorage } from "../config/firebaseConfig";
 import i18n from "@/i18n";
 
 export default {
   name: "Game",
   data: () => ({
     info: "",
+    progressUpload: 0,
+    fileName: "",
+    uploadTask: "",
+    uploading: false,
+    uploadEnd: false,
+    downloadURL: "",
     validRegister: true,
     registerIsLoading: false,
     show1: false,
@@ -243,19 +434,27 @@ export default {
     password: "",
     verify: "",
     emailRules: [
-      v => !!v || "Required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      (v) => !!v || "Required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
     rules: {
-      required: value => !!value || i18n.t("required"),
-      min: v => (v && v.length >= 8) || i18n.t("min8Chars")
-    }
+      required: (value) => !!value || i18n.t("required"),
+      min: (v) => (v && v.length >= 8) || i18n.t("min8Chars"),
+    },
   }),
   metaInfo: {
     titleTemplate: "%s | Result",
   },
   methods: {
-    ...mapActions(["makeGroup", "assignGift", "registerByEmail", "registerUserFirestore", "logoutFirebase", "saveGroup", "saveAssigned"]),
+    ...mapActions([
+      "makeGroup",
+      "assignGift",
+      "registerByEmail",
+      "registerUserFirestore",
+      "logoutFirebase",
+      "saveGroup",
+      "saveAssigned",
+    ]),
     // Shuffles an array using the Fisher-Yates method
     shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -276,7 +475,7 @@ export default {
         let data = {
           fullName: this.fullName,
           email: this.email,
-          password: this.password
+          password: this.password,
         };
         this.registerByEmail(data)
           .then(() => {
@@ -286,39 +485,109 @@ export default {
             this.$swal(i18n.t("registerSuccesful"));
           })
           .catch((error) => {
-            this.$swal(i18n.t("errorLogin"));
+            this.$swal(error.message);
             console.log("Error de registro", error);
           })
           .then(() => {
             this.registerIsLoading = false;
           });
-      }else{
+      } else {
         this.$swal(i18n.t("errorLogin"));
       }
     },
-    save(){
+    save() {
       this.saveGroup();
       this.saveAssigned();
       this.$swal(i18n.t("groupSaved"));
-    }
-  },
-  async mounted() {
-    if(this.isLoggedIn){
-      await this.$store.dispatch("getSavedGroup");
-      await this.$store.dispatch("getSavedAssignedGroup");
-    }else{
-      let n = this.nParticipants - 1;
+    },
+    async createNewGroup() {
+      const { value: nP } = await this.$swal({
+        title: i18n.t("nParticipants"),
+        icon: "question",
+        showCancelButton: true,
+        input: "range",
+        inputAttributes: {
+          min: 2,
+          max: 20,
+          step: 1,
+        },
+        inputValue: 10,
+      });
+      let n = nP - 1;
       await this.$store.dispatch("makeGroup", n);
-      //console.log(this.group);
       let shuffled = [].concat(this.group);
       shuffled = this.shuffle(shuffled);
-      //console.log(shuffled);
       await this.$store.dispatch("assignGift", shuffled);
-      //console.log(this.assigned);
+      this.save();
+    },
+    async reshuffle() {
+      let shuffled = [].concat(this.group);
+      shuffled = this.shuffle(shuffled);
+      await this.$store.dispatch("assignGift", shuffled);
+      this.save();
+    },
+    selectFile() {
+      this.$refs.uploadInput.click();
+    },
+    detectFiles(e) {
+      let fileList = e.target.files || e.dataTransfer.files;
+      if (e) {
+        let filesize = (fileList[0].size / 1024).toFixed(0);
+        // Revisa que el archivo pese menos de 500KB
+        if (filesize < 1001) {
+          this.uploading = true;
+          Array.from(Array(fileList.length).keys()).map((x) => {
+            this.upload(fileList[x]);
+          });
+        } else {
+          this.$swal("Max. 1MB");
+        }
       }
+    },
+    upload(file) {
+      this.fileName = file.name;
+      console.log("this.downloadURL1: " + this.downloadURL);
+      this.uploadTask = firestorage
+        .ref(`pictures/` + this.fullName + "/" + `${new Date().getTime()}_${file.name}`)
+        .put(file);
+      this.uploading = false;
+      /*this.uploadTask = firestorage
+              .ref(`fotosPerfil/${new Date().getTime()}_${file.name}`)
+              .put(file);*/
+    },
+    deleteImage() {
+      firestorage
+        .ref("pictures/" + this.fullName + "/" + this.fileName)
+        .delete()
+        .then(() => {
+          this.uploading = false;
+          this.uploadEnd = false;
+          this.downloadURL = "";
+        })
+        .catch((error) => {
+          console.error(`file delete error occured: ${error}`);
+        });
+      this.$refs.form.reset();
+    },
+  },
+  async mounted() {
+    if (!this.isLoggedIn) {
+      let n = this.nParticipants - 1;
+      await this.$store.dispatch("makeGroup", n);
+      let shuffled = [].concat(this.group);
+      shuffled = this.shuffle(shuffled);
+      await this.$store.dispatch("assignGift", shuffled);
+    }
   },
   computed: {
-    ...mapGetters(["nParticipants", "fullName", "group", "assigned", "isLoggedIn"]),
+    ...mapGetters([
+      "nParticipants",
+      "fullName",
+      "group",
+      "assigned",
+      "isLoggedIn",
+      "picture",
+    ]),
     loading() {
       if (!this.assigned[0]) {
         return true;
@@ -326,7 +595,37 @@ export default {
     },
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
-    }
+    },
+    profilePicture: {
+      get: function () {
+        return this.picture;
+      },
+      set: function (newValue) {
+        this.picture = newValue;
+      },
+    },
+  },
+  watch: {
+    uploadTask: function () {
+      this.uploadTask.on(
+        "state_changed",
+        (sp) => {
+          this.progressUpload = Math.floor(
+            (sp.bytesTransferred / sp.totalBytes) * 100
+          );
+        },
+        null,
+        () => {
+          this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.uploadEnd = true;
+            this.downloadURL = downloadURL;
+            console.log("this.downloadURL2: " + this.downloadURL);
+            this.$store.dispatch("setPicture", this.downloadURL);
+            //this.$emit("downloadURL", downloadURL);
+          });
+        }
+      );
+    },
   },
 };
 </script>

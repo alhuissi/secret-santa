@@ -24,6 +24,10 @@
     "groupSaved": "Group saved!",
     "loginHere": "Login with your email here",
     "emailInvalid": "Invalid email",
+    "configuration": "Configuration",
+    "changePicture": "Change Picture",
+    "createNewGroup": "Create new group",
+    "shuffleAgain": "Reshuffle",
     "english": "English",
     "spanish": "Spanish",
     "french": "French"

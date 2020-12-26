@@ -24,6 +24,10 @@
     "groupSaved": "Groupe enregistré!",
     "loginHere": "Entre avec ton email ici.",
     "emailInvalid": "Email invalide",
+    "configuration": "Configuration",
+    "changePicture": "Changer l'image",
+    "createNewGroup": "Créer nouveau groupe",
+    "shuffleAgain": "Remanier",
     "english": "Anglais",
     "spanish": "Espagnol",
     "french": "Français"

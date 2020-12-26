@@ -1,7 +1,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import { firebaseAuth, db, firestorage } from "../config/firebaseConfig";
+import { firebaseAuth, db } from "../config/firebaseConfig";
 import axios from "axios";
 
 Vue.use(Vuex);
@@ -10,10 +10,10 @@ export default new Vuex.Store({
     state: {
         isLoggedIn: firebaseAuth().currentUser != null,
         user: firebaseAuth().currentUser,
-        userInfo: null,
+        //userInfo: null,
         fullName: 'full name',
         email: 'email@example.com',
-        photo: 'mdi-account-circle',
+        picture: 'mdi-account-circle',
         nParticipants: 10,
         group: [],
         assigned: [],
@@ -22,6 +22,7 @@ export default new Vuex.Store({
         AUTH_STATUS_CHANGE(state) {
             state.isLoggedIn = firebaseAuth().currentUser != null;
             state.user = firebaseAuth().currentUser;
+            //console.log('isLoggedIn: '+state.isLoggedIn);
         },
         AUTH_INFO(state) {
             let docRef = db.collection("users").doc(firebaseAuth().currentUser.uid);
@@ -31,15 +32,16 @@ export default new Vuex.Store({
                     if (doc.exists) {
                         state.fullName = doc.data().fullName;
                         state.email = doc.data().email;
+                        state.picture = doc.data().picture;
                     } else {
-                        // doc.data() will be undefined in this case
+
                         console.log("No such document!");
                     }
                 })
                 .catch(function (error) {
                     console.log("Error getting document:", error);
                 });
-            state.userInfo = db.collection("users").doc(firebaseAuth().currentUser.uid);
+            //state.userInfo = db.collection("users").doc(firebaseAuth().currentUser.uid);
         },
         CHANGE_NPARTICIPANTS(state, n) {
             state.nParticipants = n;
@@ -50,8 +52,8 @@ export default new Vuex.Store({
         CHANGE_EMAIL(state, email) {
             state.email = email;
         },
-        CHANGE_PHOTO(state, photo) {
-            state.photo = photo;
+        CHANGE_PICTURE(state, picture) {
+            state.picture = picture;
         },
         SET_GROUP(state, group) {
             state.group = group;
@@ -104,6 +106,7 @@ export default new Vuex.Store({
                 .set({
                     fullName: fullName,
                     email: email,
+                    picture: '',
                     id: id,
                 });
         },
@@ -112,9 +115,6 @@ export default new Vuex.Store({
         },
         logoutFirebase() {
             return firebaseAuth().signOut();
-        },
-        uploadPhoto() {
-            return firestorage();
         },
         setNParticipants({ commit }, n) {
             commit("CHANGE_NPARTICIPANTS", n);
@@ -125,12 +125,18 @@ export default new Vuex.Store({
         setEmail({ commit }, email) {
             commit("CHANGE_EMAIL", email);
         },
-        setPhoto({ commit }, photo) {
-            commit("CHANGE_PHOTO", photo);
+        setPicture({ commit }, picture) {
+            commit("CHANGE_PICTURE", picture);
+            const id = firebaseAuth().currentUser.uid;
+            return db
+                .collection("users")
+                .doc(id)
+                .update({
+                    picture: picture
+                });
         },
         saveGroup(){
             const id = firebaseAuth().currentUser.uid;
-            //let group = this.state.assigned;
             return db
                 .collection("groups")
                 .doc(id)
@@ -143,7 +149,6 @@ export default new Vuex.Store({
         },
         saveAssigned(){
             const id = firebaseAuth().currentUser.uid;
-            //let group = this.state.assigned;
             return db
                 .collection("assigned")
                 .doc(id)
@@ -172,12 +177,12 @@ export default new Vuex.Store({
             let assigned = [];
             // To assign gifts, we insert the user into the first position of a new array that includes the rest of the group already shuffled,
             // and we assign every person to the next one in the shuffled array.
-            assigned[0] = { 'giver': this.state.fullName, 'receiver': { 'fullname': shuffled[0].name.first + ' ' + shuffled[0].name.last, 'email': shuffled[0].email, "photo": shuffled[0].picture.medium } }
+            assigned[0] = { 'giver': this.state.fullName, 'receiver': { 'fullname': shuffled[0].name.first + ' ' + shuffled[0].name.last, 'email': shuffled[0].email, "picture": shuffled[0].picture.medium } }
             for (let i = 1; i < shuffled.length; i++) {
-                assigned[i] = { 'giver': shuffled[i - 1].name.first + ' ' + shuffled[i - 1].name.last, 'receiver': { 'fullname': shuffled[i].name.first + ' ' + shuffled[i].name.last, 'email': shuffled[i].email, "photo": shuffled[i].picture.medium } }
+                assigned[i] = { 'giver': shuffled[i - 1].name.first + ' ' + shuffled[i - 1].name.last, 'receiver': { 'fullname': shuffled[i].name.first + ' ' + shuffled[i].name.last, 'email': shuffled[i].email, "picture": shuffled[i].picture.medium } }
             }
             // Finally, we assign the last person of the shuffled array to the user, so that there's no duplicates.
-            assigned[shuffled.length] = { 'giver': shuffled[shuffled.length - 1].name.first + ' ' + shuffled[shuffled.length - 1].name.last, 'receiver': { 'fullname': this.state.fullName, 'email': this.state.email, "photo": this.state.photo } }
+            assigned[shuffled.length] = { 'giver': shuffled[shuffled.length - 1].name.first + ' ' + shuffled[shuffled.length - 1].name.last, 'receiver': { 'fullname': this.state.fullName, 'email': this.state.email, "picture": this.state.picture } }
             commit("ASSIGN_GIFT", assigned);
         }
     },
@@ -191,8 +196,8 @@ export default new Vuex.Store({
         email: (state) => {
             return state.email;
         },
-        photo: (state) => {
-            return state.photo;
+        picture: (state) => {
+            return state.picture;
         },
         isLoggedIn: (state) => {
             return state.isLoggedIn;

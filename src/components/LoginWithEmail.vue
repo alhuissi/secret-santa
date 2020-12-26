@@ -109,7 +109,7 @@ export default {
             this.$router.push("/game");
           })
           .catch((error) => {
-            this.$swal("Error en los datos");
+            this.$swal(error.message);
             console.log(error);
           })
           .then(() => {
@@ -117,7 +117,7 @@ export default {
           });
 
         //this.$store.dispatch("loginWithEmail", this.fullNameEntered);
-        console.log("Loggged in as: " + this.email);
+        console.log("Loggging in as: " + this.email);
 
       } else {
         this.$swal(i18n.t("errorLogin"));
