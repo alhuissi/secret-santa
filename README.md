@@ -15,7 +15,6 @@ Features:
 - Upload profile picture
 - Save group in order to check it back later
 - CSS animations (lightweight)
-- Unit testing with Jest
 
 
 Random user generator API: https://randomuser.me/

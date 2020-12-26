@@ -20,6 +20,14 @@ export default new Vuex.Store({
         AUTH_STATUS_CHANGE(state) {
             state.isLoggedIn = firebaseAuth().currentUser != null;
             state.user = firebaseAuth().currentUser;
+            if(state.isLoggedIn==false){
+                state.picture = '';
+                state.fullName = '';
+                state.email = '';
+                state.group = [];
+                state.assigned = [];
+                state.nParticipants = 10;
+            }
         },
         AUTH_INFO(state) {
             let docRef = db.collection("users").doc(firebaseAuth().currentUser.uid);

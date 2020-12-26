@@ -117,7 +117,13 @@
                       <div class="text-no-wrap">
                         <b> {{ this.fullName }} </b>
                       </div>
-                      <div v-if="this.email" class="text-no-wrap" style="font-size:calc(9px + 0.3vw)"> {{ this.email }} </div>
+                      <div
+                        v-if="this.email"
+                        class="text-no-wrap"
+                        style="font-size: calc(9px + 0.3vw)"
+                      >
+                        {{ this.email }}
+                      </div>
                     </v-col>
                   </v-row>
                   <v-row
@@ -142,7 +148,51 @@
                       <div class="text-no-wrap">
                         <b> {{ person.name.first }} {{ person.name.last }} </b>
                       </div>
-                      <div class="text-no-wrap" style="font-size:calc(9px + 0.3vw)"> {{ person.email }} </div>
+                      <div
+                        class="text-no-wrap"
+                        style="font-size: calc(9px + 0.3vw)"
+                      >
+                        {{ person.email }}
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-divider class="my-6"></v-divider>
+
+                  <v-row align="center">
+                    <v-col cols="4">
+                      <v-icon size="30">mdi-autorenew</v-icon>
+                    </v-col>
+                    <v-col cols="8">
+                      <v-btn
+                        color="black"
+                        block
+                        dark
+                        outlined
+                        small
+                        @click="createNewGroup"
+                      >
+                        <h4>{{ $t("createNewGroup") }}</h4>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                  <v-divider class="my-6"></v-divider>
+
+                  <v-row align="center">
+                    <v-col cols="4">
+                      <v-icon size="30">mdi-shuffle-variant</v-icon>
+                    </v-col>
+                    <v-col cols="8">
+                      <v-btn
+                        color="black"
+                        block
+                        dark
+                        outlined
+                        small
+                        @click="reshuffle"
+                      >
+                        <h4>{{ $t("shuffleAgain") }}</h4>
+                      </v-btn>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
@@ -164,8 +214,6 @@
                   <h3>{{ $t("saveList") }}</h3>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content class="my-2">
-                  <v-card class="px-4">
-                    <v-card-text>
                       <v-form
                         ref="registerForm"
                         v-model="validRegister"
@@ -226,8 +274,6 @@
                           </v-col>
                         </v-row>
                       </v-form>
-                    </v-card-text>
-                  </v-card>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -336,38 +382,18 @@
                   <v-divider class="my-6"></v-divider>
 
                   <v-row align="center">
-                    <v-col cols="4">
-                      <v-icon size="30">mdi-autorenew</v-icon>
-                    </v-col>
-                    <v-col cols="8">
-                      <v-btn
-                        color="black"
-                        block
-                        dark
-                        outlined
-                        small
-                        @click="createNewGroup"
-                      >
-                        <h4>{{ $t("createNewGroup") }}</h4>
+                    <v-col>
+                      <v-btn @click="seeSorting" color="black" outlined block>
+                        {{ $t("seeSorting") }}
                       </v-btn>
                     </v-col>
                   </v-row>
                   <v-divider class="my-6"></v-divider>
 
                   <v-row align="center">
-                    <v-col cols="4">
-                      <v-icon size="30">mdi-shuffle-variant</v-icon>
-                    </v-col>
-                    <v-col cols="8">
-                      <v-btn
-                        color="black"
-                        block
-                        dark
-                        outlined
-                        small
-                        @click="reshuffle"
-                      >
-                        <h4>{{ $t("shuffleAgain") }}</h4>
+                    <v-col>
+                      <v-btn @click="save" color="success" block>
+                        {{ $t("saveList") }}
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -497,13 +523,14 @@ export default {
       let shuffled = [].concat(this.group);
       shuffled = this.shuffle(shuffled);
       await this.$store.dispatch("assignGift", shuffled);
-      this.save();
     },
     async reshuffle() {
       let shuffled = [].concat(this.group);
       shuffled = this.shuffle(shuffled);
       await this.$store.dispatch("assignGift", shuffled);
-      this.save();
+    },
+    seeSorting(){
+      this.$router.push("/allPairs");
     },
     selectFile() {
       this.$refs.uploadInput.click();
@@ -533,7 +560,6 @@ export default {
             `${new Date().getTime()}_${file.name}`
         )
         .put(file);
-      
     },
     deleteImage() {
       firestorage

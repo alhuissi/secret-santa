@@ -11,18 +11,22 @@ const routes = [
     component: Login
   },
   {
+    path: "/loginWithEmail",
+    name: "LoginWithEmail",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/LoginWithEmail.vue")
+  },
+  {
     path: "/game",
     name: "Game",
-
     component: () =>
       import(/* webpackChunkName: "home" */ "../views/Game.vue")
   },
   {
-    path: "/loginWithEmail",
-    name: "LoginWithEmail",
-
+    path: "/allPairs",
+    name: "AllPairs",
     component: () =>
-      import(/* webpackChunkName: "home" */ "../views/LoginWithEmail.vue")
+      import(/* webpackChunkName: "home" */ "../views/allPairs.vue")
   },
 ];
 
