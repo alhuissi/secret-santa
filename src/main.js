@@ -33,6 +33,7 @@ function authStatusChange(user) {
 	if (store) {
 		store.commit("AUTH_STATUS_CHANGE");
 		if (user) {
+      // Fetches saved group from firestore when user logs in
       store.dispatch("getSavedGroup");
       store.dispatch("getSavedAssignedGroup");
 			store.commit("AUTH_INFO");

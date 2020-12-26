@@ -16,7 +16,7 @@
     "logout": "Salir",
     "register": "Registrarse",
     "registerSuccesful": "¡Te haz registrado con éxito! Ahora puedes ingresar con tu email y recuperar los datos del grupo.",
-    "registerText": "Para grabar este grupo, primero debes registrarte con tu email.",
+    "registerText": "Para grabar este grupo, debes registrarte primero.",
     "errorLogin": "Error. Por favor revisa los datos ingresados.",
     "alreadyRegistered": "¿Ya tienes un grupo guardado?",
     "loginWithEmail": "Bienvenido de vuelta! Por favor ingresa tu email y contraseña.",

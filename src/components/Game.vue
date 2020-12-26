@@ -1,9 +1,9 @@
 <template>
   <section class="Game">
     <v-container>
-      <v-row align="center" style="height: 70vh">
+      <v-row align="center" style="height:70vh">
         <v-col align="center">
-          <!-- The image and name of the person you have to give gift to, with a little css christmas animation -->
+          <!-- The image and name of the person you have to give a gift to, with some little christmas lights animationnn -->
           <div class="animation-wrapper">
             <v-row>
               <v-col align="center">
@@ -16,19 +16,9 @@
 
             <v-row>
               <v-col align="center">
-                <v-progress-circular
-                  v-if="loading"
-                  indeterminate
-                  size="100"
-                  class="my-12"
-                  style="transition: all 325ms ease"
-                  color="green"
-                ></v-progress-circular>
                 <v-avatar
-                  v-if="!loading"
                   size="100"
-                  style="transition: all 325ms ease; margin-top: 10px"
-                >
+                  style="transition: all 325ms ease; margin-top: 10px">
                   <v-img :src="this.assigned[0].receiver.picture"
                     ><template v-slot:placeholder>
                       <v-sheet>
@@ -386,15 +376,7 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
-            <!--v-btn
-              v-if="isLoggedIn"
-              color="secondary"
-              block
-              style="margin-top: 10px"
-              @click="save"
-            >
-              <h3>{{ $t("saveList") }}</h3>
-            </v-btn-->
+            <!-- Logout -->
             <v-btn
               color="secondary"
               block
@@ -404,8 +386,6 @@
               <h3>{{ $t("logout") }}</h3>
             </v-btn>
           </v-card>
-
-          <!-- Logout -->
         </v-col>
       </v-row>
     </v-container>
@@ -495,6 +475,7 @@ export default {
         this.$swal(i18n.t("errorLogin"));
       }
     },
+    // Save groups in firestore database
     save() {
       this.saveGroup();
       this.saveAssigned();
@@ -533,7 +514,7 @@ export default {
       let fileList = e.target.files || e.dataTransfer.files;
       if (e) {
         let filesize = (fileList[0].size / 1024).toFixed(0);
-        // Revisa que el archivo pese menos de 500KB
+        // Makes sure the file is less than 1MB
         if (filesize < 1001) {
           this.uploading = true;
           Array.from(Array(fileList.length).keys()).map((x) => {
@@ -546,14 +527,10 @@ export default {
     },
     upload(file) {
       this.fileName = file.name;
-      console.log("this.downloadURL1: " + this.downloadURL);
       this.uploadTask = firestorage
         .ref(`pictures/` + this.fullName + "/" + `${new Date().getTime()}_${file.name}`)
         .put(file);
       this.uploading = false;
-      /*this.uploadTask = firestorage
-              .ref(`fotosPerfil/${new Date().getTime()}_${file.name}`)
-              .put(file);*/
     },
     deleteImage() {
       firestorage
@@ -571,6 +548,8 @@ export default {
     },
   },
   async mounted() {
+    // If the user isn't registered, it creates a new group and combination
+    // If the user is logged in (registered), we fetch the saved group from firestore in main.js
     if (!this.isLoggedIn) {
       let n = this.nParticipants - 1;
       await this.$store.dispatch("makeGroup", n);
@@ -619,9 +598,7 @@ export default {
           this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             this.uploadEnd = true;
             this.downloadURL = downloadURL;
-            console.log("this.downloadURL2: " + this.downloadURL);
-            this.$store.dispatch("setPicture", this.downloadURL);
-            //this.$emit("downloadURL", downloadURL);
+            this.$store.dispatch("setPicture", this.downloadURL); // saves the picture's URL in firestore database
           });
         }
       );

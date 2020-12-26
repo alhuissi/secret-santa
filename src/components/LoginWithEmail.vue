@@ -116,9 +116,6 @@ export default {
             this.isLoading = false;
           });
 
-        //this.$store.dispatch("loginWithEmail", this.fullNameEntered);
-        console.log("Loggging in as: " + this.email);
-
       } else {
         this.$swal(i18n.t("errorLogin"));
       }

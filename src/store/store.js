@@ -10,10 +10,9 @@ export default new Vuex.Store({
     state: {
         isLoggedIn: firebaseAuth().currentUser != null,
         user: firebaseAuth().currentUser,
-        //userInfo: null,
-        fullName: 'full name',
+        fullName: 'Anonymous',
         email: 'email@example.com',
-        picture: 'mdi-account-circle',
+        picture: '',
         nParticipants: 10,
         group: [],
         assigned: [],
@@ -22,7 +21,6 @@ export default new Vuex.Store({
         AUTH_STATUS_CHANGE(state) {
             state.isLoggedIn = firebaseAuth().currentUser != null;
             state.user = firebaseAuth().currentUser;
-            //console.log('isLoggedIn: '+state.isLoggedIn);
         },
         AUTH_INFO(state) {
             let docRef = db.collection("users").doc(firebaseAuth().currentUser.uid);
@@ -41,7 +39,6 @@ export default new Vuex.Store({
                 .catch(function (error) {
                     console.log("Error getting document:", error);
                 });
-            //state.userInfo = db.collection("users").doc(firebaseAuth().currentUser.uid);
         },
         CHANGE_NPARTICIPANTS(state, n) {
             state.nParticipants = n;
@@ -175,13 +172,13 @@ export default new Vuex.Store({
         },
         assignGift({ commit }, shuffled) {
             let assigned = [];
-            // To assign gifts, we insert the user into the first position of a new array that includes the rest of the group already shuffled,
-            // and we assign every person to the next one in the shuffled array.
+            // To assign gifts, we insert the user into the first position of an array that has the rest of the group already shuffled,
+            // Then we assign every person to the next one in the shuffled array.
             assigned[0] = { 'giver': this.state.fullName, 'receiver': { 'fullname': shuffled[0].name.first + ' ' + shuffled[0].name.last, 'email': shuffled[0].email, "picture": shuffled[0].picture.medium } }
             for (let i = 1; i < shuffled.length; i++) {
                 assigned[i] = { 'giver': shuffled[i - 1].name.first + ' ' + shuffled[i - 1].name.last, 'receiver': { 'fullname': shuffled[i].name.first + ' ' + shuffled[i].name.last, 'email': shuffled[i].email, "picture": shuffled[i].picture.medium } }
             }
-            // Finally, we assign the last person of the shuffled array to the user, so that there's no duplicates.
+            // Finally, we assign the last person of the shuffled array to the user, that way there's no duplicates.
             assigned[shuffled.length] = { 'giver': shuffled[shuffled.length - 1].name.first + ' ' + shuffled[shuffled.length - 1].name.last, 'receiver': { 'fullname': this.state.fullName, 'email': this.state.email, "picture": this.state.picture } }
             commit("ASSIGN_GIFT", assigned);
         }

@@ -16,7 +16,7 @@
     "logout": "Se Déconnecter",
     "register": "Se registrer",
     "registerSuccesful": "Tu t'es enregistré avec succès. Maintenant tu peut entrer avec to email et récuperer toute la data du groupe.",
-    "registerText": "Pour enregistrer le groupe, il est nécessaire de se registrer avec ton email.",
+    "registerText": "Pour enregistrer le groupe, il est nécessaire de se registrer.",
     "errorLogin": "Erreur. Revise la data s'il te plaît.",
     "alreadyRegistered": "As-tu déjà un groupe enregistré?",
     "loginWithEmail": "Content de te revoir! Écrit ton email et ton mot de passe s'il te plaît.",

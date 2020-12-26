@@ -16,7 +16,7 @@
     "logout": "Logout",
     "registerSuccesful": "Succes! You can now login with your email and recover this group's data.",
     "register": "Register",
-    "registerText": "In order to save this group, you must first register with your email.",
+    "registerText": "In order to save this group, you must register first.",
     "errorLogin": "Error. Please check your inputs.",
     "alreadyRegistered": "Already have a group saved?",
     "loginWithEmail": "Welcome back! Please enter your email and password.",
