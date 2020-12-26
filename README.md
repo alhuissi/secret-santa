@@ -2,7 +2,7 @@
 
 ![alt text](https://firebasestorage.googleapis.com/v0/b/secret-santa-83260.appspot.com/o/snapshot.jpg?alt=media&token=94637f9e-d024-4cf7-8c8d-5faf68c85461)
 
-A web application that fetches random users from an API, and creates a Secret Santa game where every user has to give and receive 1 gift.
+A web application that fetches random users from an API, and creates a Secret Santa game where every user has to give and receive 1 gift. The sorting of pairs is done with the Fisher-Yates method.
 
 Features:
 
