@@ -1,7 +1,7 @@
 <template>
   <section>
     <v-container>
-      <v-row align="center" style="height:70vh;">
+      <v-row align="center" style="height:70vh;padding-top:6vh;">
         <v-col cols="12" align="center">
           <v-card
             style="
