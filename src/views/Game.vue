@@ -1,7 +1,7 @@
 <template>
   <section class="Game">
     <v-container>
-      <v-row align="center" style="height:70vh">
+      <v-row align="center">
         <v-col align="center">
           <!-- The image and name of the person you have to give a gift to, with some little christmas lights animationnn -->
           <div class="animation-wrapper">
@@ -18,8 +18,9 @@
               <v-col align="center">
                 <v-avatar
                   size="100"
-                  style="transition: all 325ms ease; margin-top: 10px">
-                  <v-img :src="this.assigned[0].receiver.picture"
+                  style="transition: all 325ms ease; margin-top: 10px"
+                >
+                  <v-img :src="this.profilePictureReceiver"
                     ><template v-slot:placeholder>
                       <v-sheet>
                         <v-skeleton-loader type="card-avatar" />
@@ -34,18 +35,14 @@
               flat
               v-if="this.assigned[0]"
             >
-              <div>
-                <h3>{{ $t("secretSantaText1") }}</h3>
-              </div>
+              <h3>{{ $t("secretSantaText1") }}</h3>
               <h1>
                 <b
                   >{{ this.assigned[0].receiver.fullname
                   }}{{ $t("secretSantaTextS") }}</b
                 >
               </h1>
-              <div>
-                <h3>{{ $t("secretSantaText2") }}</h3>
-              </div>
+              <h3>{{ $t("secretSantaText2") }}</h3>
             </v-card>
 
             <v-row>
@@ -75,7 +72,6 @@
                     <v-col cols="1" align="center"> <b>1</b> </v-col>
                     <v-col cols="3" md="2">
                       <v-avatar color="grey">
-                        <!--v-icon dark> mdi-account-circle </v-icon-->
                         <v-icon
                           v-if="
                             !uploadEnd && !uploading && profilePicture == ''
@@ -121,6 +117,7 @@
                       <div class="text-no-wrap">
                         <b> {{ this.fullName }} </b>
                       </div>
+                      <div v-if="this.email" class="text-no-wrap" style="font-size:calc(9px + 0.3vw)"> {{ this.email }} </div>
                     </v-col>
                   </v-row>
                   <v-row
@@ -145,7 +142,7 @@
                       <div class="text-no-wrap">
                         <b> {{ person.name.first }} {{ person.name.last }} </b>
                       </div>
-                      <!--div class="text-no-wrap"> {{ person.login.username }} </div-->
+                      <div class="text-no-wrap" style="font-size:calc(9px + 0.3vw)"> {{ person.email }} </div>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
@@ -182,7 +179,7 @@
                         <v-row>
                           <v-col cols="12">
                             <v-text-field
-                              v-model="email"
+                              v-model="emailInput"
                               :rules="emailRules"
                               label="E-mail"
                               required
@@ -217,6 +214,7 @@
                           <v-spacer></v-spacer>
                           <v-col cols="12" align="center">
                             <v-btn
+                              block
                               :disabled="!validRegister"
                               color="success"
                               @click="register"
@@ -410,7 +408,7 @@ export default {
     validRegister: true,
     registerIsLoading: false,
     show1: false,
-    email: "",
+    emailInput: "",
     password: "",
     verify: "",
     emailRules: [
@@ -454,12 +452,12 @@ export default {
         this.registerIsLoading = true;
         let data = {
           fullName: this.fullName,
-          email: this.email,
+          email: this.emailInput,
           password: this.password,
         };
         this.registerByEmail(data)
           .then(() => {
-            console.log("User registered: " + this.email);
+            console.log("User registered: " + data.email);
             this.registerUserFirestore(data);
             this.save();
             this.$swal(i18n.t("registerSuccesful"));
@@ -514,23 +512,28 @@ export default {
       let fileList = e.target.files || e.dataTransfer.files;
       if (e) {
         let filesize = (fileList[0].size / 1024).toFixed(0);
-        // Makes sure the file is less than 1MB
-        if (filesize < 1001) {
+        // Makes sure the file is less than 2MB
+        if (filesize < 2001) {
           this.uploading = true;
           Array.from(Array(fileList.length).keys()).map((x) => {
             this.upload(fileList[x]);
           });
         } else {
-          this.$swal("Max. 1MB");
+          this.$swal("Max. 2MB");
         }
       }
     },
     upload(file) {
       this.fileName = file.name;
       this.uploadTask = firestorage
-        .ref(`pictures/` + this.fullName + "/" + `${new Date().getTime()}_${file.name}`)
+        .ref(
+          `pictures/` +
+            this.fullName +
+            "/" +
+            `${new Date().getTime()}_${file.name}`
+        )
         .put(file);
-      this.uploading = false;
+      
     },
     deleteImage() {
       firestorage
@@ -562,6 +565,7 @@ export default {
     ...mapGetters([
       "nParticipants",
       "fullName",
+      "email",
       "group",
       "assigned",
       "isLoggedIn",
@@ -583,6 +587,9 @@ export default {
         this.picture = newValue;
       },
     },
+    profilePictureReceiver() {
+      return this.assigned[0] ? this.assigned[0].receiver.picture : "";
+    },
   },
   watch: {
     uploadTask: function () {
@@ -596,6 +603,7 @@ export default {
         null,
         () => {
           this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.uploading = false;
             this.uploadEnd = true;
             this.downloadURL = downloadURL;
             this.$store.dispatch("setPicture", this.downloadURL); // saves the picture's URL in firestore database
@@ -611,7 +619,7 @@ export default {
 @import "../assets/animations.css";
 
 .Game {
-  width: 100vw;
-  height: 100vh;
+  min-width: 100vw;
+  min-height: 100%;
 }
 </style>

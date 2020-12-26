@@ -1,4 +1,3 @@
-
 import Vue from "vue";
 import Vuex from "vuex";
 import { firebaseAuth, db } from "../config/firebaseConfig";
@@ -11,7 +10,7 @@ export default new Vuex.Store({
         isLoggedIn: firebaseAuth().currentUser != null,
         user: firebaseAuth().currentUser,
         fullName: 'Anonymous',
-        email: 'email@example.com',
+        email: '',
         picture: '',
         nParticipants: 10,
         group: [],

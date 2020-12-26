@@ -3,12 +3,12 @@ node_modules
 /dist
 
 # firebase files
-# .firebaserc
-# /src/config
-# firebase.json
-# firebase.indexes.json
-# firestore.rules
-# storage.rules
+.firebaserc
+/src/config
+firebase.json
+firebase.indexes.json
+firestore.rules
+storage.rules
 
 
 # local env files

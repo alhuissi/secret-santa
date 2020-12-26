@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Login from "../components/Login.vue";
+import Login from "../views/Login.vue";
 
 Vue.use(VueRouter);
 
@@ -15,14 +15,14 @@ const routes = [
     name: "Game",
 
     component: () =>
-      import(/* webpackChunkName: "home" */ "../components/Game.vue")
+      import(/* webpackChunkName: "home" */ "../views/Game.vue")
   },
   {
     path: "/loginWithEmail",
     name: "LoginWithEmail",
 
     component: () =>
-      import(/* webpackChunkName: "home" */ "../components/LoginWithEmail.vue")
+      import(/* webpackChunkName: "home" */ "../views/LoginWithEmail.vue")
   },
 ];
 

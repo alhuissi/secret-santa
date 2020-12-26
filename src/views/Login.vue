@@ -1,25 +1,22 @@
 <template>
   <section>
     <v-container>
-      <v-row align="center" style="height: 70vh">
+      <v-row align="center" style="height:70vh;">
         <v-col cols="12" align="center">
           <v-card
             style="
               background-color: rgba(0, 0, 0, 0);
-              font-size: calc(12px + 0.6vw);
+              font-size: calc(11px + 0.6vw);
               max-width: 600px;
             "
-            class="py-4"
-            flat
-          >
+            class="py-2"
+            flat>
             <h3>{{ $t("welcomeMessage") }}</h3>
           </v-card>
-
           <v-card
             style="background-color: rgba(255, 255, 255, 0.9)"
             class="px-4"
-            max-width="400"
-          >
+            max-width="400">
             <v-card-text>
               <v-form ref="loginForm" v-model="validFullname" lazy-validation>
                 <v-row>
@@ -50,8 +47,7 @@
                       x-large
                       block
                       color="secondary"
-                      @click="login"
-                    >
+                      @click="login">
                       {{ $t("generate") }}
                     </v-btn>
                   </v-col>
@@ -59,7 +55,6 @@
               </v-form>
             </v-card-text>
           </v-card>
-
             <br />
           <v-card flat style="background-color: rgba(255, 255, 255, 0)">
             <v-label> {{ $t("alreadyRegistered") }} </v-label> <br />
@@ -121,7 +116,5 @@ export default {
 
 
 <style scoped>
-.hover:hover{
-    cursor:pointer;
-}
+
 </style>

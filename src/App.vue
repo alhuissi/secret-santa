@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <div class="bck-img">
     <!-- Header -->
     <v-app-bar app color="primary" dark>
       <!-- My Logo -->
@@ -69,6 +70,7 @@
         <router-view ref="routerViewRef" class="component-container" />
       </transition>
     </v-main>
+    </div>
   </v-app>
 </template>
 
@@ -98,7 +100,7 @@ export default {
     ],
   }),
   metaInfo: {
-    title: "Secret Santa",
+    title: "Secret Santapp",
     titleTemplate: "%s ",
     htmlAttrs: {
       lang: "en",
@@ -156,18 +158,29 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.5s ease;
+  transition: all 325ms ease;
 }
+.fade-enter,
 .fade-leave-to {
   opacity: 0;
 }
-.fade-enter,
 .fade-leave {
   opacity: 1;
 }
 .component-container {
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  padding-top:0vh;
+  top: 0;
+  left: 0;
+}
+body {
+  font-family: "Poppins";
+}
+.bck-img{
+  width: 100vw;
+  height: 100vh;
+  padding-top:0vh;
   background-size: cover;
   background-image: linear-gradient(
       to top,
@@ -178,17 +191,15 @@ export default {
   top: 0;
   left: 0;
 }
-body {
-  font-family: "Poppins";
-}
 
 .logo {
-  width: 20vw;
-  height: 20vh;
   transition: 725ms ease;
 }
 .logoContainer:hover .logo {
   transition: 725ms ease;
   transform: rotateY(180deg);
+}
+.swal2-title{
+  font-size:1.5em!important;
 }
 </style>
