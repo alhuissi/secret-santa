@@ -156,9 +156,7 @@
                       </div>
                     </v-col>
                   </v-row>
-
                   <v-divider class="my-6"></v-divider>
-
                   <v-row align="center">
                     <v-col cols="4">
                       <v-icon size="30">mdi-autorenew</v-icon>
@@ -177,7 +175,6 @@
                     </v-col>
                   </v-row>
                   <v-divider class="my-6"></v-divider>
-
                   <v-row align="center">
                     <v-col cols="4">
                       <v-icon size="30">mdi-shuffle-variant</v-icon>
@@ -419,6 +416,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { firestorage } from "../config/firebaseConfig";
+import goTo from "vuetify/es5/services/goto";
 import i18n from "@/i18n";
 
 export default {
@@ -525,6 +523,7 @@ export default {
       await this.$store.dispatch("assignGift", shuffled);
     },
     async reshuffle() {
+      goTo(0);
       let shuffled = [].concat(this.group);
       shuffled = this.shuffle(shuffled);
       await this.$store.dispatch("assignGift", shuffled);

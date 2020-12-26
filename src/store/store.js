@@ -181,7 +181,7 @@ export default new Vuex.Store({
             let assigned = [];
             // To assign gifts, we insert the user into the first position of an array that has the rest of the group already shuffled,
             // Then we assign every person to the next one in the shuffled array.
-            assigned[0] = { 'giver': this.state.fullName, 'receiver': { 'fullname': shuffled[0].name.first + ' ' + shuffled[0].name.last, 'email': shuffled[0].email, "picture": shuffled[0].picture.medium } }
+            assigned[0] = { 'giver': this.state.fullName, 'receiver': { 'fullname': shuffled[0].name.first + ' ' + shuffled[0].name.last, 'email': shuffled[0].email, "picture": shuffled[0].picture.thumbnail } }
             for (let i = 1; i < shuffled.length; i++) {
                 assigned[i] = { 'giver': shuffled[i - 1].name.first + ' ' + shuffled[i - 1].name.last, 'receiver': { 'fullname': shuffled[i].name.first + ' ' + shuffled[i].name.last, 'email': shuffled[i].email, "picture": shuffled[i].picture.medium } }
             }
