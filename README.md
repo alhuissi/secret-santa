@@ -19,9 +19,11 @@ Features:
 
 Random user generator API: https://randomuser.me/
 
-Testing account: 
+#### Testing account: 
+```
 email: tester@example.com
 password: 12345678
+```
 
 
 ## Project download and setup
